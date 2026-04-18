@@ -25,5 +25,7 @@ nvm install --lts
 nvm use --lts
 
 echo -e "${GREEN}Node.js installation complete!${NC}"
+sudo source ~/.bashrc
+
 node -v
 npm -v

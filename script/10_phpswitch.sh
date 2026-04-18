@@ -15,7 +15,7 @@ DO_INSTALL=true
 
 if [ -f "$PHP_SWITCH_PATH" ]; then
     echo -e "${YELLOW}phpswitch utility already exists at $PHP_SWITCH_PATH.${NC}"
-    read -p "Do you want to overwrite it? (y/n): " overwrite_switch
+    read -p "Do you want to overwrite it? (y/n): " overwrite_switch < /dev/tty
     if [[ ! "$overwrite_switch" =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}Skipping phpswitch installation.${NC}"
         DO_INSTALL=false

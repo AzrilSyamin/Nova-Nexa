@@ -12,6 +12,9 @@ echo -e "${BLUE}------------------------------------------${NC}"
 echo -e "${GREEN}Installing MySQL Server...${NC}"
 sudo apt install -y mysql-server
 
+# Start service immediately (necessary for Docker since policy-rc.d prevents auto-start)
+sudo service mysql start
+
 echo -e "${GREEN}Configuring MySQL root user (empty password for dev)...${NC}"
 sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ''; FLUSH PRIVILEGES;"
 
@@ -22,8 +25,5 @@ if ! grep -q "sudo service mysql start" ~/.bashrc; then
 else
     echo -e "${GREEN}Already in .bashrc${NC}"
 fi
-
-# Start service now
-sudo service mysql start
 
 echo -e "${GREEN}MySQL installation and configuration complete!${NC}"
