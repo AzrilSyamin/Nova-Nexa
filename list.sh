@@ -24,7 +24,7 @@ show_list() {
             printf "%-20s %-30s ${COLOR}%-10s${NC} %-10s\n" "$PROJECT" "$DOMAIN" "$PORT" "$TYPE"
         done
         echo -e "${BLUE}============================================================================${NC}"
-        echo -e "Available commands: ${GREEN}new${NC} | ${YELLOW}attach${NC} | ${RED}del${NC} | ${BLUE}list${NC} | [--help | -h | help | ] | exit"
+        echo -e "Available commands: ${GREEN}new${NC} | ${YELLOW}attach${NC} | ${RED}del${NC} | help | exit"
     }
     list_sites
 }

@@ -29,30 +29,27 @@ run_attachsite() {
 
 # ── Show help ─────────────────────────────────────────────────
 if [ -z "$1" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-    cat << HELP
+        echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        echo -e "${BLUE}                 NOVA NEXA - ATTACH SITE                      ${NC}"
+        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        echo -e "\nUsage: ${YELLOW}attach${NC} <name> --cat=<category> [options]\n"
 
-attach — Attach existing project folder to Nginx + SSL + Hosts
+        echo -e "${YELLOW}Categories (required):${NC}"
+        printf "  ${GREEN}%-15s${NC} %-40s\n" "--cat=dev" "~/projects/dev/<name>     → <name>.dev.test"
+        printf "  ${YELLOW}%-15s${NC} %-40s\n" "--cat=staging" "~/projects/staging/<name> → <name>.staging.test"
+        printf "  ${BLUE}%-15s${NC} %-40s\n" "--cat=study" "~/projects/study/<name>   → <name>.study.test"
 
-Usage:
-    attach <n> --cat=<category> [options]
+        echo -e "\n${YELLOW}Options:${NC}"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--php=8.2" "Specify PHP version (default: 8.2)"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--js" "JS project (uses reverse proxy instead of PHP-FPM)"
+        printf "  ${MAGENTA}%-15s${NC} %-40s\n" "--port=XXXX" "Dev server port (default: 3000, Vite: 5173)"
 
-Categories (required):
-    --cat=dev       ~/projects/dev/<n>     → <n>.dev.test
-    --cat=staging   ~/projects/staging/<n> → <n>.staging.test
-    --cat=study     ~/projects/study/<n>   → <n>.study.test
-
-Options:
-    --php=8.2       PHP version (default: 8.2)
-    --js            JS project (uses reverse proxy instead of PHP-FPM)
-    --port=XXXX     Dev server port (default: 3000, use 5173 for Vite)
-
-Examples:
-    attach myapp --cat=dev
-    attach myapp --cat=dev --php=8.1
-    attach myapp --cat=dev --js --port=5173
-    attach myapp --cat=staging --js --port=3000
-
-HELP
+        echo -e "\n${CYAN}Examples:${NC}"
+        echo -e "  nexa > ${YELLOW}attach myapp --cat=dev${NC}"
+        echo -e "  nexa > ${YELLOW}attach myapp --cat=dev --php=8.1${NC}"
+        echo -e "  nexa > ${YELLOW}attach myapp --cat=dev --js --port=5173${NC}"
+        echo -e "  nexa > ${YELLOW}attach myapp --cat=staging --js --port=3000${NC}"
+        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}\n"
     return 0
 fi
 
@@ -170,118 +167,20 @@ fi
     mkcert "$DOMAIN"
 
     # ══════════════════════════════════════════
-    #  CREATE NGINX CONFIG
+    #  CREATE NGINX CONFIG & RELOAD SERVICES
     # ══════════════════════════════════════════
-if [ "$IS_JS" = true ]; then
-    # Reverse proxy → JS dev server
-    sudo bash -c "cat > /etc/nginx/sites-available/${DOMAIN}.conf" << EOF
-server {
-    listen 80;
-    listen [::]:80;
-    server_name ${DOMAIN};
-    return 301 https://\$server_name\$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name ${DOMAIN};
-
-    ssl_certificate     ${CERTS_DIR}/${DOMAIN}.pem;
-    ssl_certificate_key ${CERTS_DIR}/${DOMAIN}-key.pem;
-
-    location / {
-        proxy_pass http://127.0.0.1:${DEV_PORT};
-        proxy_http_version 1.1;
-
-        # WebSocket support (HMR for Vite / Next.js)
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "upgrade";
-
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-
-        proxy_read_timeout 86400;
-    }
-}
-EOF
-
-else
-    # Serve directly → PHP / Laravel
-    sudo bash -c "cat > /etc/nginx/sites-available/${DOMAIN}.conf" << EOF
-server {
-    listen 80;
-    listen [::]:80;
-    server_name ${DOMAIN};
-    return 301 https://\$server_name\$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name ${DOMAIN};
-    root        ${WEB_ROOT};
-
-    index index.php index.html index.htm;
-
-    ssl_certificate     ${CERTS_DIR}/${DOMAIN}.pem;
-    ssl_certificate_key ${CERTS_DIR}/${DOMAIN}-key.pem;
-
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-
-    client_max_body_size 100M;
-
-    location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-    }
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php${PHP_VERSION}-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-}
-EOF
-fi
-
-    # ── Enable site ───────────────────────────────────────────────
-    sudo ln -s /etc/nginx/sites-available/${DOMAIN}.conf /etc/nginx/sites-enabled/
-
-    # ── Test & reload Nginx ───────────────────────────────────────
-    sudo nginx -t
-    if [ $? -ne 0 ]; then
-        echo "Error: Nginx configuration test failed"
-        return 1
+    if [ "$IS_JS" = true ]; then
+        generate_nginx_js_conf "$DOMAIN" "$DEV_PORT" "$CERTS_DIR"
+        reload_web_services "" || return 1
+    else
+        generate_nginx_php_conf "$DOMAIN" "$WEB_ROOT" "$CERTS_DIR" "$PHP_VERSION"
+        reload_web_services "$PHP_VERSION" || return 1
     fi
-
-    if [ "$IS_JS" = false ]; then
-        sudo service php${PHP_VERSION}-fpm start 2>/dev/null
-    fi
-
-    sudo service nginx reload
 
     # ══════════════════════════════════════════
     #  AUTO-UPDATE WINDOWS HOSTS FILE
     # ══════════════════════════════════════════
-    if [ -d "/mnt/c/wsl-hosts-sync" ]; then
-        if [ -f "$PENDING_FILE" ]; then
-            echo "ADD $DOMAIN 127.0.0.1" >> "$PENDING_FILE"
-        else
-            echo "ADD $DOMAIN 127.0.0.1" > "$PENDING_FILE"
-        fi
-        HOSTS_MSG="🌐 Hosts file will be updated in ~5 seconds (automatic)"
-    else
-        HOSTS_MSG="⚠ Add manually: 127.0.0.1 ${DOMAIN}  →  C:\\Windows\\System32\\drivers\\etc\\hosts"
-    fi
+    HOSTS_MSG=$(update_windows_hosts "ADD" "$DOMAIN")
 
     # ══════════════════════════════════════════
     #  FINAL SUMMARY

@@ -37,34 +37,35 @@ run_newsite() {
 
     # ── Show help ─────────────────────────────────────────────────
     if [ -z "$1" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-        echo ""
-        echo "Usage: new <name> --cat=<category> [options]"
-        echo ""
-        echo "── Categories (required) ────────────────────────────"
-        echo "  --cat=dev        ~/projects/dev/<name>     → <name>.dev.test"
-        echo "  --cat=staging    ~/projects/staging/<name> → <name>.staging.test"
-        echo "  --cat=study      ~/projects/study/<name>   → <name>.study.test"
-        echo ""
-        echo "── PHP ──────────────────────────────────────────────"
-        echo "  (no flag)        Plain PHP"
-        echo "  --laravel        Latest Laravel"
-        echo "  --laravel=11     Specific version"
-        echo "  --php=8.2        PHP version (default: 8.2)"
-        echo ""
-        echo "── JavaScript ───────────────────────────────────────"
-        echo "  --react          React + Vite  (port 5173)"
-        echo "  --next           Next.js        (port 3000)"
-        echo "  --vue            Vue + Vite     (port 5173)"
-        echo "  --nuxt           Nuxt.js        (port 3000)"
-        echo "  --express        Express.js     (port 3000)"
-        echo "  --port=XXXX      Override dev port"
-        echo ""
-        echo "── Examples ─────────────────────────────────────────"
-        echo "  new myapp --cat=dev --laravel=11 --php=8.3"
-        echo "  new myapp --cat=study --react"
-        echo "  new myapp --cat=staging --next --port=3001"
-        echo "  new myapp --cat=dev --express"
-        echo ""
+        echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        echo -e "${BLUE}                   NOVA NEXA - NEW SITE                       ${NC}"
+        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        echo -e "\nUsage: ${GREEN}new${NC} <name> --cat=<category> [options]\n"
+
+        echo -e "${YELLOW}Categories (required):${NC}"
+        printf "  ${GREEN}%-15s${NC} %-40s\n" "--cat=dev" "~/projects/dev/<name>     → <name>.dev.test"
+        printf "  ${YELLOW}%-15s${NC} %-40s\n" "--cat=staging" "~/projects/staging/<name> → <name>.staging.test"
+        printf "  ${BLUE}%-15s${NC} %-40s\n" "--cat=study" "~/projects/study/<name>   → <name>.study.test"
+
+        echo -e "\n${YELLOW}PHP Options:${NC}"
+        printf "  %-15s %-40s\n" "(no flag)" "Plain PHP project"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--laravel" "Install latest Laravel"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--laravel=11" "Install specific Laravel version"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--php=8.3" "Specify PHP version (default: 8.2)"
+
+        echo -e "\n${YELLOW}JavaScript Options (Reverse Proxy):${NC}"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--react" "React + Vite   (port 5173)"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--next" "Next.js        (port 3000)"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--vue" "Vue + Vite     (port 5173)"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--nuxt" "Nuxt.js        (port 3000)"
+        printf "  ${CYAN}%-15s${NC} %-40s\n" "--express" "Express.js     (port 3000)"
+        printf "  ${MAGENTA}%-15s${NC} %-40s\n" "--port=XXXX" "Override development port manually"
+
+        echo -e "\n${CYAN}Examples:${NC}"
+        echo -e "  nexa > ${GREEN}new myapp --cat=dev --laravel=11 --php=8.3${NC}"
+        echo -e "  nexa > ${GREEN}new myapp --cat=study --react${NC}"
+        echo -e "  nexa > ${GREEN}new myapp --cat=staging --next --port=3001${NC}"
+        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}\n"
         return 0
     fi
 
@@ -267,119 +268,21 @@ EXPRESSEOF
     mkcert "$DOMAIN"
 
 # ══════════════════════════════════════════
-#  CREATE NGINX CONFIG
+#  CREATE NGINX CONFIG & RELOAD SERVICES
 # ══════════════════════════════════════════
 
-if [ -n "$JS_FRAMEWORK" ]; then
-    # Reverse proxy → JS dev server
-    sudo bash -c "cat > /etc/nginx/sites-available/${DOMAIN}.conf" << EOF
-server {
-    listen 80;
-    listen [::]:80;
-    server_name ${DOMAIN};
-    return 301 https://\$server_name\$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name ${DOMAIN};
-
-    ssl_certificate     ${CERTS_DIR}/${DOMAIN}.pem;
-    ssl_certificate_key ${CERTS_DIR}/${DOMAIN}-key.pem;
-
-    location / {
-        proxy_pass http://127.0.0.1:${DEV_PORT};
-        proxy_http_version 1.1;
-
-        # WebSocket support (HMR for Vite / Next.js)
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "upgrade";
-
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-
-        proxy_read_timeout 86400;
-    }
-}
-EOF
-
-else
-    # Serve directly → PHP
-    sudo bash -c "cat > /etc/nginx/sites-available/${DOMAIN}.conf" << EOF
-server {
-    listen 80;
-    listen [::]:80;
-    server_name ${DOMAIN};
-    return 301 https://\$server_name\$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name ${DOMAIN};
-    root        ${WEB_ROOT};
-
-    index index.php index.html index.htm;
-
-    ssl_certificate     ${CERTS_DIR}/${DOMAIN}.pem;
-    ssl_certificate_key ${CERTS_DIR}/${DOMAIN}-key.pem;
-
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-
-    client_max_body_size 100M;
-
-    location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
-    }
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php${PHP_VERSION}-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-}
-EOF
-fi
-
-    # ── Enable site ───────────────────────────────────────────────
-    sudo ln -s /etc/nginx/sites-available/${DOMAIN}.conf /etc/nginx/sites-enabled/
-
-    # ── Test & reload Nginx ───────────────────────────────────────
-    sudo nginx -t
-    if [ $? -ne 0 ]; then
-        echo "Error: Nginx configuration test failed"
-        return 1
-    fi
-
-    if [ -z "$JS_FRAMEWORK" ]; then
-        sudo service php${PHP_VERSION}-fpm start 2>/dev/null
-    fi
-
-    sudo service nginx reload
-
-    # ══════════════════════════════════════════
-    #  AUTO-UPDATE WINDOWS HOSTS FILE
-    # ══════════════════════════════════════════
-    if [ -d "/mnt/c/wsl-hosts-sync" ]; then
-        if [ -f "$PENDING_FILE" ]; then
-            echo "ADD $DOMAIN 127.0.0.1" >> "$PENDING_FILE"
-        else
-            echo "ADD $DOMAIN 127.0.0.1" > "$PENDING_FILE"
-        fi
-        HOSTS_MSG="🌐 Hosts file will be updated in ~5 seconds (automatic)"
+    if [ -n "$JS_FRAMEWORK" ]; then
+        generate_nginx_js_conf "$DOMAIN" "$DEV_PORT" "$CERTS_DIR"
+        reload_web_services "" || return 1
     else
-        HOSTS_MSG="⚠ Add manually: 127.0.0.1 ${DOMAIN}  →  C:\\Windows\\System32\\drivers\\etc\\hosts"
+        generate_nginx_php_conf "$DOMAIN" "$WEB_ROOT" "$CERTS_DIR" "$PHP_VERSION"
+        reload_web_services "$PHP_VERSION" || return 1
     fi
+
+# ══════════════════════════════════════════
+#  AUTO-UPDATE WINDOWS HOSTS FILE
+# ══════════════════════════════════════════
+    HOSTS_MSG=$(update_windows_hosts "ADD" "$DOMAIN")
 
     # ══════════════════════════════════════════
     #  FINAL SUMMARY

@@ -11,6 +11,28 @@ run_delsite() {
     local CERTS_DIR="$HOME/.local/share/mkcert"
     local PENDING_FILE="/mnt/c/wsl-hosts-sync/pending.txt"
 
+    # ── Show help ─────────────────────────────────────────────────
+    if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+        echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        echo -e "${BLUE}                 NOVA NEXA - DELETE SITE                      ${NC}"
+        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        echo -e "\nUsage: ${RED}del${NC} <name> --cat=<category> [options]"
+        echo -e "       ${RED}del${NC} <domain>\n"
+
+        echo -e "${YELLOW}Methods:${NC}"
+        printf "  ${GREEN}%-30s${NC} %-40s\n" "del myapp.dev.test" "Delete using full domain"
+        printf "  ${YELLOW}%-30s${NC} %-40s\n" "del myapp --cat=dev" "Delete using project name and category"
+        printf "  ${CYAN}%-30s${NC} %-40s\n" "del" "Interactive mode (shows a list to choose from)"
+
+        echo -e "\n${CYAN}What it does:${NC}"
+        echo -e "  - Deletes the project folder"
+        echo -e "  - Removes Nginx configuration"
+        echo -e "  - Deletes SSL certificates"
+        echo -e "  - Queues Windows hosts file removal"
+        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}\n"
+        return 0
+    fi
+
     # ── List all active sites ─────────────────────────────────────
     show_sites() {
         echo ""
@@ -49,16 +71,6 @@ run_delsite() {
         fi
         echo "────────────────────────────────────────────────────────"
         echo ""
-    }
-
-    # ── Queue hosts file removal ──────────────────────────────────
-    remove_hosts_entry() {
-        local domain=$1
-        if [ -f "$PENDING_FILE" ]; then
-            echo "REMOVE $domain" >> "$PENDING_FILE"
-        else
-            echo "REMOVE $domain" > "$PENDING_FILE"
-        fi
     }
 
     # ── Core delete function ──────────────────────────────────────
@@ -118,17 +130,11 @@ run_delsite() {
             || echo "  ⚠ SSL certificates not found"
 
         # 6. Queue Windows hosts removal
-        if [ -d "/mnt/c/wsl-hosts-sync" ]; then
-            remove_hosts_entry "$DOMAIN"
-            echo "  ✓ Hosts file will be updated in ~5 seconds"
-        else
-            echo "  ⚠ Windows bridge not found"
-            echo "    Remove manually: $DOMAIN from C:\\Windows\\System32\\drivers\\etc\\hosts"
-        fi
+        update_windows_hosts "REMOVE" "$DOMAIN"
 
         # 7. Reload Nginx
         if sudo nginx -t 2>/dev/null; then
-            sudo service nginx reload
+            reload_web_services "" >/dev/null
             echo "  ✓ Nginx reloaded"
         fi
 

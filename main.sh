@@ -22,6 +22,8 @@ source "$BASE_DIR/list.sh"
 source "$BASE_DIR/new.sh"
 source "$BASE_DIR/attach.sh"
 source "$BASE_DIR/del.sh"
+source "$BASE_DIR/utils.sh"
+
 
 # --- Color Definitions ---
 BLUE='\033[1;34m'
@@ -44,7 +46,6 @@ nexa_help() {
     printf "  ${GREEN}%-10s${NC} %-40s\n" "new" "Create a new site (PHP/Laravel/JS/React/Next/etc)"
     printf "  ${YELLOW}%-10s${NC} %-40s\n" "attach" "Attach existing project folder to Nginx + SSL"
     printf "  ${RED}%-10s${NC} %-40s\n" "del" "Remove site configuration and SSL"
-    printf "  ${BLUE}%-10s${NC} %-40s\n" "list" "Show all configured projects"
     printf "  ${CYAN}%-10s${NC} %-40s\n" "help" "Show this help menu"
     printf "  ${MAGENTA}%-10s${NC} %-40s\n" "exit" "Exit Nova Nexa"
 
@@ -88,9 +89,6 @@ while true; do
         del)
             run_delsite "$@"
             wait_user ;;
-        list)
-            # Just continue loop to trigger show_list again
-            ;;
         help | -h | --help)
             nexa_help
             # Add a small pause so user can read before screen clears

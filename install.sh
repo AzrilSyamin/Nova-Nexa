@@ -62,7 +62,6 @@ if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
     # Run all modular scripts in order
     for script in script/*.sh; do
         if [ -f "$script" ]; then
-            echo -e "\n${YELLOW}Running $script...${NC}"
             chmod +x "$script"
             ./"$script" < /dev/null
             if [ $? -ne 0 ]; then
