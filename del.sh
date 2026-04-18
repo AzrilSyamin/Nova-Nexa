@@ -152,6 +152,11 @@ run_delsite() {
         [ "$input" = "q" ] || [ -z "$input" ] && { echo "Cancelled."; return 0; }
         local DOMAIN="$input"
 
+    elif [[ "$1" == --* ]]; then
+        echo -e "\n${RED}Error: Project name or domain cannot start with '--'${NC}"
+        echo "Usage: del <name> --cat=<category> or del <domain>"
+        return 1
+
     elif echo "$1" | grep -q "\.test$"; then
         # Full domain passed: e.g. myapp.dev.test
         local DOMAIN="$1"

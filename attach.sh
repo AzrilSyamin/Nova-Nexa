@@ -56,6 +56,14 @@ HELP
     return 0
 fi
 
+    # ── Validate basic input ──────────────────────────────────────
+    if [ -z "$1" ] || [[ "$1" == --* ]]; then
+        echo -e "\n${RED}Error: Project name is required and cannot start with '--'${NC}"
+        echo "Usage: attach <name> --cat=<category> [options]"
+        echo "Example: attach myapp --cat=dev"
+        return 1
+    fi
+
     local PROJECT_NAME=$1
 
     # ── Parse arguments ───────────────────────────────────────────

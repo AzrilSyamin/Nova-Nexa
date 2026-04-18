@@ -68,6 +68,14 @@ run_newsite() {
         return 0
     fi
 
+    # ── Validate basic input ──────────────────────────────────────
+    if [ -z "$1" ] || [[ "$1" == --* ]]; then
+        echo -e "\n${RED}Error: Project name is required and cannot start with '--'${NC}"
+        echo "Usage: new <name> --cat=<category> [options]"
+        echo "Example: new myapp --cat=dev"
+        return 1
+    fi
+
     local PROJECT_NAME=$1
 
     # ── Parse arguments ───────────────────────────────────────────
