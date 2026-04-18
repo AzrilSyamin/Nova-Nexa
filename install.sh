@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# --- Sudo Fallback for Minimal Environments ---
+if ! command -v sudo >/dev/null 2>&1; then
+    if [ "$(id -u)" -eq 0 ]; then
+        sudo() {
+            "$@"
+        }
+        export -f sudo
+    else
+        echo -e "\033[0;31mError: 'sudo' is not installed and you are not running as root.\033[0m"
+        echo "Please run this script as root or install 'sudo' first."
+        exit 1
+    fi
+fi
+
 # --- Color Definitions ---
 GREEN='\033[0;32m'
 BLUE='\033[1;34m'
