@@ -53,7 +53,7 @@ if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
         echo -e "${YELLOW}Downloading environment setup scripts...${NC}"
         TEMP_SETUP=$(mktemp -d)
         curl -sSL "$ZIP_URL" -o "$TEMP_SETUP/nexa.zip"
-        unzip -q "$TEMP_SETUP/nexa.zip" -d "$TEMP_SETUP"
+        unzip -q "$TEMP_SETUP/nexa.zip" -d "$TEMP_SETUP" < /dev/null
         # Find the extracted directory (e.g., Nova-Nexa-main)
         EXTRACTED_DIR=$(find "$TEMP_SETUP" -mindepth 1 -maxdepth 1 -type d)
         cd "$EXTRACTED_DIR" || exit
@@ -64,7 +64,7 @@ if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
         if [ -f "$script" ]; then
             echo -e "\n${YELLOW}Running $script...${NC}"
             chmod +x "$script"
-            ./"$script"
+            ./"$script" < /dev/null
             if [ $? -ne 0 ]; then
                 echo -e "${RED}Error occurred while running $script. Continuing...${NC}"
             fi
