@@ -42,7 +42,7 @@ if [ -z "$1" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
         echo -e "\n${YELLOW}Options:${NC}"
         printf "  ${CYAN}%-15s${NC} %-40s\n" "--php=8.2" "Specify PHP version (default: 8.2)"
         printf "  ${CYAN}%-15s${NC} %-40s\n" "--js" "JS project (uses reverse proxy instead of PHP-FPM)"
-        printf "  ${MAGENTA}%-15s${NC} %-40s\n" "--port=XXXX" "Dev server port (default: 3000, Vite: 5173)"
+        printf "  ${WHITE}%-15s${NC} %-40s\n" "--port=XXXX" "Dev server port (default: 3000, Vite: 5173)"
 
         echo -e "\n${CYAN}Examples:${NC}"
         echo -e "  nexa > ${YELLOW}attach myapp --cat=dev${NC}"

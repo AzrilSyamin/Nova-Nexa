@@ -59,7 +59,7 @@ run_newsite() {
         printf "  ${CYAN}%-15s${NC} %-40s\n" "--vue" "Vue + Vite     (port 5173)"
         printf "  ${CYAN}%-15s${NC} %-40s\n" "--nuxt" "Nuxt.js        (port 3000)"
         printf "  ${CYAN}%-15s${NC} %-40s\n" "--express" "Express.js     (port 3000)"
-        printf "  ${MAGENTA}%-15s${NC} %-40s\n" "--port=XXXX" "Override development port manually"
+        printf "  ${WHITE}%-15s${NC} %-40s\n" "--port=XXXX" "Override development port manually"
 
         echo -e "\n${CYAN}Examples:${NC}"
         echo -e "  nexa > ${GREEN}new myapp --cat=dev --laravel=11 --php=8.3${NC}"

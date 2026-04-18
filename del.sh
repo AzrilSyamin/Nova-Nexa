@@ -20,9 +20,12 @@ run_delsite() {
         echo -e "       ${RED}del${NC} <domain>\n"
 
         echo -e "${YELLOW}Methods:${NC}"
-        printf "  ${GREEN}%-30s${NC} %-40s\n" "del myapp.dev.test" "Delete using full domain"
-        printf "  ${YELLOW}%-30s${NC} %-40s\n" "del myapp --cat=dev" "Delete using project name and category"
+        printf "  ${GREEN}%-30s${NC} %-40s\n" "del <domain>" "Delete using full domain (e.g. myapp.dev.test)"
+        printf "  ${YELLOW}%-30s${NC} %-40s\n" "del <name> --cat=<cat>" "Delete using project name and category"
         printf "  ${CYAN}%-30s${NC} %-40s\n" "del" "Interactive mode (shows a list to choose from)"
+
+        echo -e "\n${YELLOW}Options:${NC}"
+        printf "  ${WHITE}%-30s${NC} %-40s\n" "--keep" "Keep project folder (delete configs only)"
 
         echo -e "\n${CYAN}What it does:${NC}"
         echo -e "  - Deletes the project folder"
@@ -76,6 +79,7 @@ run_delsite() {
     # ── Core delete function ──────────────────────────────────────
     delete_site() {
         local DOMAIN=$1
+        local KEEP_FOLDER=${2:-false}
         local CONF="/etc/nginx/sites-available/${DOMAIN}.conf"
 
         echo ""
@@ -97,7 +101,9 @@ run_delsite() {
         fi
 
         # 2. Delete project folder
-        if [ -n "$PROJECT_DIR" ] && [ -d "$PROJECT_DIR" ]; then
+        if [ "$KEEP_FOLDER" = true ]; then
+            echo "  🔒 Project folder kept safe: $PROJECT_DIR"
+        elif [ -n "$PROJECT_DIR" ] && [ -d "$PROJECT_DIR" ]; then
             rm -rf "$PROJECT_DIR"
             echo "  ✓ Project folder deleted: $PROJECT_DIR"
         else
@@ -166,13 +172,21 @@ run_delsite() {
     elif echo "$1" | grep -q "\.test$"; then
         # Full domain passed: e.g. myapp.dev.test
         local DOMAIN="$1"
+        local KEEP=false
+        for arg in "$@"; do
+            case $arg in --keep) KEEP=true ;; esac
+        done
 
     else
         # Name + --cat flag
         local PROJECT_NAME="$1"
         local CATEGORY=""
+        local KEEP=false
         for arg in "$@"; do
-            case $arg in --cat=*) CATEGORY="${arg#*=}" ;; esac
+            case $arg in 
+                --cat=*) CATEGORY="${arg#*=}" ;;
+                --keep)  KEEP=true ;;
+            esac
         done
 
         if [ -z "$CATEGORY" ]; then
@@ -209,19 +223,31 @@ run_delsite() {
 
     echo ""
     echo "════════════════════════════════════════"
-    echo "  The following will be DELETED:"
+    echo "  Deletion Summary for $DOMAIN:"
     echo "════════════════════════════════════════"
-    [ -d "$PROJ_FOLDER" ] \
-        && echo "  📁 Folder : $PROJ_FOLDER" \
-        || echo "  📁 Folder : (not found — will be skipped)"
     [ -f "$CONF" ]                          && echo "  ⚙  Nginx  : ${DOMAIN}.conf"
     [ -f "$CERTS_DIR/${DOMAIN}.pem" ]       && echo "  🔒 SSL    : ${DOMAIN}.pem"
     echo "  🌐 Hosts  : 127.0.0.1 $DOMAIN"
+    
+    if [ -d "$PROJ_FOLDER" ]; then
+        echo -e "  📁 Folder : $PROJ_FOLDER ${YELLOW}(Optional)${NC}"
+    else
+        echo "  📁 Folder : (not found)"
+    fi
     echo "════════════════════════════════════════"
     echo ""
 
-    read -p "Continue? (y/N): " confirm
+    read -p "Continue with deletion? (y/N): " confirm
     [[ ! "$confirm" =~ ^[Yy]$ ]] && { echo "Cancelled."; return 0; }
 
-    delete_site "$DOMAIN"
+    # If --keep wasn't passed, ask specifically about the folder
+    if [ "$KEEP" = false ]; then
+        echo -e "\n${YELLOW}Caution:${NC} Do you want to delete the project folder at $PROJ_FOLDER too?"
+        read -p "(y/N): " del_folder
+        if [[ ! "$del_folder" =~ ^[Yy]$ ]]; then
+            KEEP=true
+        fi
+    fi
+
+    delete_site "$DOMAIN" "$KEEP"
 }

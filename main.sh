@@ -31,7 +31,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 CYAN='\033[0;36m'
-MAGENTA='\033[0;35m'
+MAGENTA='\033[0;35m' # Deprecated, keep for compatibility if needed
+WHITE='\033[1;37m'
 NC='\033[0m'
 
 # Function to show help menu
@@ -47,7 +48,7 @@ nexa_help() {
     printf "  ${YELLOW}%-10s${NC} %-40s\n" "attach" "Attach existing project folder to Nginx + SSL"
     printf "  ${RED}%-10s${NC} %-40s\n" "del" "Remove site configuration and SSL"
     printf "  ${CYAN}%-10s${NC} %-40s\n" "help" "Show this help menu"
-    printf "  ${MAGENTA}%-10s${NC} %-40s\n" "exit" "Exit Nova Nexa"
+    printf "  ${WHITE}%-10s${NC} %-40s\n" "exit" "Exit Nova Nexa"
 
     echo -e "\n${YELLOW}Project Categories:${NC}"
     echo -e "  Nova Nexa organizes projects into three categories:"
