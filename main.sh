@@ -28,21 +28,36 @@ BLUE='\033[1;34m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
 NC='\033[0m'
 
 # Function to show help menu
 nexa_help() {
-    echo -e "\nUsage: <action> or <action> --help for specific info"
-    echo -e "Example: new --help\n"
-    echo -e "Available Actions:"
+    echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}             NOVA NEXA - WSL2 Development Tool             ${NC}"
+    echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+    echo -e "\nUsage: ${GREEN}<command>${NC} [options]"
+    echo -e "Example: ${GREEN}new${NC} myapp --cat=dev --laravel\n"
     
-    printf "  ${GREEN}%-10s${NC} %-40s\n" "new" "- Create a new site project"
-    printf "  ${YELLOW}%-10s${NC} %-40s\n" "attach" "- Attach an existing site to Nginx"
-    printf "  ${RED}%-10s${NC} %-40s\n" "del" "- Delete a site configuration"
-    printf "  ${BLUE}%-10s${NC} %-40s\n" "list" "- Refresh and show the site list"
-    printf "  ${CYAN}%-10s${NC} %-40s\n" "help / -h" "- Show this help menu"
-    
-    echo -e "  %-10s %-40s\n" "exit" "Close the nexa program"
+    echo -e "${YELLOW}Available Commands:${NC}"
+    printf "  ${GREEN}%-10s${NC} %-40s\n" "new" "Create a new site (PHP/Laravel/JS/React/Next/etc)"
+    printf "  ${YELLOW}%-10s${NC} %-40s\n" "attach" "Attach existing project folder to Nginx + SSL"
+    printf "  ${RED}%-10s${NC} %-40s\n" "del" "Remove site configuration and SSL"
+    printf "  ${BLUE}%-10s${NC} %-40s\n" "list" "Show all configured projects"
+    printf "  ${CYAN}%-10s${NC} %-40s\n" "help" "Show this help menu"
+    printf "  ${MAGENTA}%-10s${NC} %-40s\n" "exit" "Exit Nova Nexa"
+
+    echo -e "\n${YELLOW}Project Categories:${NC}"
+    echo -e "  Nova Nexa organizes projects into three categories:"
+    echo -e "  - ${GREEN}dev${NC}     : Active development / real projects"
+    echo -e "  - ${YELLOW}staging${NC} : Testing / pre-production"
+    echo -e "  - ${BLUE}study${NC}   : Learning, experiments & scratchpads"
+
+    echo -e "\n${CYAN}Tips:${NC}"
+    echo -e "  - Run ${GREEN}<command> --help${NC} for detailed options of any command."
+    echo -e "  - Example: ${GREEN}new --help${NC} or ${YELLOW}attach --help${NC}"
+    echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}\n"
 }
 
 wait_user() {
