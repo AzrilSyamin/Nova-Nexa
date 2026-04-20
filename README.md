@@ -23,11 +23,17 @@ Once installed, the `nexa` command gives you an interactive REPL interface to ma
 | `new` | Create a new project (PHP, Laravel, React, Next.js, Vue, etc.) from scratch. Auto-configures SSL, Nginx, and Windows hosts. |
 | `attach` | Attach an existing folder (e.g., cloned from Git) to Nginx and generate SSL certificates instantly. |
 | `del` | Completely delete a project, including its folder, Nginx config, SSL certs, and hosts entry. |
+| `config` | Manage Nova Nexa settings (e.g. Windows drive letter). |
+| `update` | Automatically check and apply Nova Nexa updates from GitHub. |
+| `uninstall` | Completely remove Nova Nexa and its configuration from your system. |
 
 > 💡 The project list is shown automatically after every action. No `list` command needed.
 
 ### 3. Utility Commands
 - `phpswitch <version>`: Instantly switch the active PHP version for CLI and Composer (e.g., `phpswitch 8.2`).
+- `nexa config`: Change settings like the Windows Hosts Sync drive on the fly.
+- `nexa update`: Interactive update checker.
+- `nexa uninstall`: Clean uninstaller for the CLI tool.
 
 ## ⚙️ Installation
 

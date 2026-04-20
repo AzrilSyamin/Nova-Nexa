@@ -28,9 +28,7 @@ run_attachsite() {
 
 # ── Show help ─────────────────────────────────────────────────
 if [ -z "$1" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-        echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
-        echo -e "${BLUE}                 NOVA NEXA - ATTACH SITE                      ${NC}"
-        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        nexa_header "NOVA NEXA - ATTACH SITE"
         echo -e "\nUsage: ${YELLOW}attach${NC} <name> --cat=<category> [options]\n"
 
         echo -e "${YELLOW}Categories (required):${NC}"

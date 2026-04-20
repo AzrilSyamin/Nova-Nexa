@@ -3,9 +3,7 @@ run_uninstall() {
     local CONFIG_DIR="$HOME/.config/nexa"
     local BIN_LINK="/usr/local/bin/nexa"
 
-    echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}                NOVA NEXA - UNINSTALL                         ${NC}"
-    echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+    nexa_header "NOVA NEXA - UNINSTALL"
 
     echo -e "\n  ${RED}⚠ This will remove Nova Nexa from your system.${NC}"
     echo -e "  The following will be deleted:"

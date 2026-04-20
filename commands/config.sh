@@ -9,9 +9,7 @@ run_config() {
     local current_dir="${NEXA_HOSTS_SYNC_DIR:-/mnt/c/wsl-hosts-sync}"
     local current_drive=$(echo "$current_dir" | cut -d'/' -f3)
 
-    echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}                  NOVA NEXA - SETTINGS                        ${NC}"
-    echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+    nexa_header "NOVA NEXA - SETTINGS"
     echo -e "\n${YELLOW}Current Settings:${NC}"
     printf "  ${CYAN}%-25s${NC} %s\n" "Hosts Sync Directory:" "$current_dir"
     echo ""

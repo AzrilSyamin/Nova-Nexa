@@ -16,7 +16,7 @@ fi
 
 # Define the base directory where other scripts live
 BASE_DIR="/opt/nexa"
-NEXA_VERSION="v0.1.1"
+NEXA_VERSION="v1.0.0"
 
 # Import (Source) the functions from other files
 source "$BASE_DIR/commands/list.sh"
@@ -88,7 +88,7 @@ while true; do
     show_list  # Function from list.sh
     
     read -e -p "nexa > " input
-
+ 
     # If input is not empty, save it to session history
     [[ -n "$input" ]] && history -s -- "$input"
 

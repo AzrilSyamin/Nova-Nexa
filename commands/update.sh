@@ -3,9 +3,7 @@ run_update() {
     local ZIP_URL="https://github.com/azrilsyamin/nova-nexa/archive/refs/heads/main.zip"
     local TAGS_API="https://api.github.com/repos/azrilsyamin/nova-nexa/tags"
 
-    echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}                  NOVA NEXA - UPDATE                          ${NC}"
-    echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+    nexa_header "NOVA NEXA - UPDATE"
     echo -e "\n  Current version : ${YELLOW}${NEXA_VERSION:-unknown}${NC}"
 
     # 1. Check internet first

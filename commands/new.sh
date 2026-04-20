@@ -36,9 +36,7 @@ run_newsite() {
 
     # ── Show help ─────────────────────────────────────────────────
     if [ -z "$1" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-        echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
-        echo -e "${BLUE}                   NOVA NEXA - NEW SITE                       ${NC}"
-        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        nexa_header "NOVA NEXA - NEW SITE"
         echo -e "\nUsage: ${GREEN}new${NC} <name> --cat=<category> [options]\n"
 
         echo -e "${YELLOW}Categories (required):${NC}"
