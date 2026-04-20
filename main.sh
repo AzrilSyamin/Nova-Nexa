@@ -24,6 +24,15 @@ source "$BASE_DIR/attach.sh"
 source "$BASE_DIR/del.sh"
 source "$BASE_DIR/utils.sh"
 
+# Load user configuration
+NEXA_CONFIG="$HOME/.config/nexa/config.sh"
+if [ -f "$NEXA_CONFIG" ]; then
+    source "$NEXA_CONFIG"
+else
+    # Fallback to default if config not found
+    NEXA_HOSTS_SYNC_DIR="/mnt/c/wsl-hosts-sync"
+fi
+
 
 # --- Color Definitions ---
 BLUE='\033[1;34m'
