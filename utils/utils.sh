@@ -166,3 +166,25 @@ check_internet() {
     fi
     return 0
 }
+
+# ── 6. UI Helpers ────────────────────────────────────────────────────────────
+# Usage: nexa_header "TEXT" [COLOR]
+nexa_header() {
+    local TEXT=$1
+    local COLOR=${2:-$BLUE}
+    echo -e "\n${COLOR}══════════════════════════════════════════════════════════════${NC}"
+    # Calculate padding for 60 chars width (30 - text/2)
+    echo -e "${COLOR}                  $TEXT${NC}"
+    echo -e "${COLOR}══════════════════════════════════════════════════════════════${NC}"
+}
+
+# Usage: nexa_box "Title" or nexa_box "border"
+nexa_box() {
+    if [ "$1" = "border" ]; then
+        echo "════════════════════════════════════════"
+    else
+        echo "════════════════════════════════════════"
+        echo "  $1"
+        echo "════════════════════════════════════════"
+    fi
+}

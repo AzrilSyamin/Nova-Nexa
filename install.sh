@@ -26,9 +26,9 @@ INSTALL_DIR="/opt/nexa"
 BIN_LINK="/usr/local/bin/nexa"
 ZIP_URL="https://github.com/azrilsyamin/nova-nexa/archive/refs/heads/main.zip"
 
-echo -e "${BLUE}------------------------------------------${NC}"
-echo -e "${BLUE}        Nova Nexa Installer               ${NC}"
-echo -e "${BLUE}------------------------------------------${NC}"
+echo -e "${BLUE}══════════════════════════════════════════${NC}"
+echo -e "${BLUE}          NOVA NEXA INSTALLER             ${NC}"
+echo -e "${BLUE}══════════════════════════════════════════${NC}"
 
 # 1. Basic Dependency Check for Installer
 echo -e "${GREEN}Checking for installer dependencies...${NC}"
@@ -159,7 +159,7 @@ EOF
     echo -e "  ${YELLOW}Remember: Create 'wsl-hosts-sync' folder on ${drive_letter}: in Windows.${NC}"
 fi
 
-echo -e "\n${BLUE}------------------------------------------${NC}"
-echo -e "${GREEN}Installation complete!${NC}"
-echo -e "You can now run ${YELLOW}'nexa'${NC} from anywhere."
-echo -e "${BLUE}------------------------------------------${NC}"
+echo -e "\n${BLUE}══════════════════════════════════════════${NC}"
+echo -e "${GREEN}✓ Installation complete!${NC}"
+echo -e "  You can now run ${YELLOW}'nexa'${NC} from anywhere."
+echo -e "${BLUE}══════════════════════════════════════════${NC}"

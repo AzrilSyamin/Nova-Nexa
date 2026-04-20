@@ -12,9 +12,7 @@ run_delsite() {
 
     # ── Show help ─────────────────────────────────────────────────
     if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
-        echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
-        echo -e "${BLUE}                 NOVA NEXA - DELETE SITE                      ${NC}"
-        echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+        nexa_header "NOVA NEXA - DELETE SITE"
         echo -e "\nUsage: ${RED}del${NC} <name> --cat=<category> [options]"
         echo -e "       ${RED}del${NC} <domain>\n"
 
