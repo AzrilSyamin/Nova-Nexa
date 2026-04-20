@@ -113,6 +113,39 @@ echo -e "${GREEN}Setting permissions and creating symlink...${NC}"
 sudo chmod +x "$INSTALL_DIR/main.sh"
 sudo ln -sf "$INSTALL_DIR/main.sh" "$BIN_LINK"
 
+# 6. Setup user config if not already exists
+CONFIG_DIR="$HOME/.config/nexa"
+CONFIG_FILE="$CONFIG_DIR/config.sh"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    mkdir -p "$CONFIG_DIR"
+
+    echo -e "\n${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${YELLOW}  Windows Hosts Sync Setup${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "  Nova Nexa needs a shared folder on Windows to auto-sync"
+    echo -e "  local domains to your Windows hosts file."
+    echo -e ""
+    echo -e "  A folder named ${GREEN}wsl-hosts-sync${NC} will be created on the"
+    echo -e "  Windows drive you specify below."
+    echo ""
+    read -p "  Enter Windows drive letter (default: C): " drive_letter < /dev/tty
+    drive_letter="${drive_letter:-C}"
+    # Normalize: convert to lowercase for WSL path
+    drive_lower=$(echo "$drive_letter" | tr '[:upper:]' '[:lower:]')
+
+    cat > "$CONFIG_FILE" << EOF
+# Nova Nexa Configuration File
+# Edit this file or run 'nexa config' to change settings.
+
+# Path to the WSL Hosts Sync folder (Windows-side bridge)
+NEXA_HOSTS_SYNC_DIR="/mnt/${drive_lower}/wsl-hosts-sync"
+EOF
+
+    echo -e "  ${GREEN}✓ Config saved to $CONFIG_FILE${NC}"
+    echo -e "  ${YELLOW}Remember: Create 'wsl-hosts-sync' folder on ${drive_letter}: in Windows.${NC}"
+fi
+
 echo -e "\n${BLUE}------------------------------------------${NC}"
 echo -e "${GREEN}Installation complete!${NC}"
 echo -e "You can now run ${YELLOW}'nexa'${NC} from anywhere."

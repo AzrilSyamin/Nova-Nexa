@@ -9,7 +9,6 @@ run_delsite() {
     # ══════════════════════════════════════════════════════════════
 
     local CERTS_DIR="$HOME/.local/share/mkcert"
-    local PENDING_FILE="/mnt/c/wsl-hosts-sync/pending.txt"
 
     # ── Show help ─────────────────────────────────────────────────
     if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then

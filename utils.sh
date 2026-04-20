@@ -128,9 +128,11 @@ update_windows_hosts() {
     local ACTION=$1
     local DOMAIN=$2
     local IP=${3:-127.0.0.1}
-    local PENDING_FILE="/mnt/c/wsl-hosts-sync/pending.txt"
+    # Uses NEXA_HOSTS_SYNC_DIR from ~/.config/nexa/config.sh (loaded by main.sh)
+    local HOSTS_SYNC_DIR="${NEXA_HOSTS_SYNC_DIR:-/mnt/c/wsl-hosts-sync}"
+    local PENDING_FILE="$HOSTS_SYNC_DIR/pending.txt"
 
-    if [ -d "/mnt/c/wsl-hosts-sync" ]; then
+    if [ -d "$HOSTS_SYNC_DIR" ]; then
         if [ "$ACTION" = "ADD" ]; then
             if [ -f "$PENDING_FILE" ]; then
                 echo "ADD $DOMAIN $IP" >> "$PENDING_FILE"

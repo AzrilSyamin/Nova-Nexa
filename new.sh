@@ -33,7 +33,6 @@ run_newsite() {
     local VALID_CATEGORIES="dev staging study"
     local PROJECTS_BASE="$HOME/projects"
     local CERTS_DIR="$HOME/.local/share/mkcert"
-    local PENDING_FILE="/mnt/c/wsl-hosts-sync/pending.txt"
 
     # ── Show help ─────────────────────────────────────────────────
     if [ -z "$1" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
