@@ -19,14 +19,14 @@ BASE_DIR="/opt/nexa"
 NEXA_VERSION="v0.1.1"
 
 # Import (Source) the functions from other files
-source "$BASE_DIR/list.sh"
-source "$BASE_DIR/new.sh"
-source "$BASE_DIR/attach.sh"
-source "$BASE_DIR/del.sh"
-source "$BASE_DIR/utils.sh"
-source "$BASE_DIR/config.sh"
-source "$BASE_DIR/update.sh"
-source "$BASE_DIR/uninstall.sh"
+source "$BASE_DIR/commands/list.sh"
+source "$BASE_DIR/commands/new.sh"
+source "$BASE_DIR/commands/attach.sh"
+source "$BASE_DIR/commands/del.sh"
+source "$BASE_DIR/utils/utils.sh"
+source "$BASE_DIR/commands/config.sh"
+source "$BASE_DIR/commands/update.sh"
+source "$BASE_DIR/commands/uninstall.sh"
 
 # Load user configuration
 NEXA_CONFIG="$HOME/.config/nexa/config.sh"
