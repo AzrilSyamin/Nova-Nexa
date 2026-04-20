@@ -16,6 +16,7 @@ fi
 
 # Define the base directory where other scripts live
 BASE_DIR="/opt/nexa"
+NEXA_VERSION="v0.1.1"
 
 # Import (Source) the functions from other files
 source "$BASE_DIR/list.sh"
@@ -24,6 +25,7 @@ source "$BASE_DIR/attach.sh"
 source "$BASE_DIR/del.sh"
 source "$BASE_DIR/utils.sh"
 source "$BASE_DIR/config.sh"
+source "$BASE_DIR/update.sh"
 
 # Load user configuration
 NEXA_CONFIG="$HOME/.config/nexa/config.sh"
@@ -59,6 +61,7 @@ nexa_help() {
     printf "  ${RED}%-10s${NC} %-40s\n" "del" "Remove site configuration and SSL"
     printf "  ${CYAN}%-10s${NC} %-40s\n" "help" "Show this help menu"
     printf "  ${WHITE}%-10s${NC} %-40s\n" "config" "Manage Nova Nexa settings"
+    printf "  ${CYAN}%-10s${NC} %-40s\n" "update" "Check and apply Nova Nexa updates"
     printf "  ${WHITE}%-10s${NC} %-40s\n" "exit" "Exit Nova Nexa"
 
     echo -e "\n${YELLOW}Project Categories:${NC}"
@@ -103,6 +106,9 @@ while true; do
             wait_user ;;
         config)
             run_config
+            wait_user ;;
+        update)
+            run_update
             wait_user ;;
         help | -h | --help)
             nexa_help

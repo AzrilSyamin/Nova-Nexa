@@ -156,3 +156,13 @@ update_windows_hosts() {
         fi
     fi
 }
+
+# ── 5. Internet Connectivity Check ───────────────────────────────────────────
+# Usage: check_internet || return 1
+check_internet() {
+    if ! curl -sSf --max-time 5 "https://github.com" -o /dev/null 2>/dev/null; then
+        echo -e "  ${RED}✗ No internet connection. Please check your network and try again.${NC}"
+        return 1
+    fi
+    return 0
+}
