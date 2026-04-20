@@ -26,6 +26,7 @@ source "$BASE_DIR/del.sh"
 source "$BASE_DIR/utils.sh"
 source "$BASE_DIR/config.sh"
 source "$BASE_DIR/update.sh"
+source "$BASE_DIR/uninstall.sh"
 
 # Load user configuration
 NEXA_CONFIG="$HOME/.config/nexa/config.sh"
@@ -62,6 +63,7 @@ nexa_help() {
     printf "  ${CYAN}%-10s${NC} %-40s\n" "help" "Show this help menu"
     printf "  ${WHITE}%-10s${NC} %-40s\n" "config" "Manage Nova Nexa settings"
     printf "  ${CYAN}%-10s${NC} %-40s\n" "update" "Check and apply Nova Nexa updates"
+    printf "  ${RED}%-10s${NC} %-40s\n" "uninstall" "Completely remove Nova Nexa from system"
     printf "  ${WHITE}%-10s${NC} %-40s\n" "exit" "Exit Nova Nexa"
 
     echo -e "\n${YELLOW}Project Categories:${NC}"
@@ -110,6 +112,8 @@ while true; do
         update)
             run_update
             wait_user ;;
+        uninstall)
+            run_uninstall ;;
         help | -h | --help)
             nexa_help
             # Add a small pause so user can read before screen clears
