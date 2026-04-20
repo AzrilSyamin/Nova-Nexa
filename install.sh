@@ -39,6 +39,13 @@ for cmd in curl unzip; do
     fi
 done
 
+# --- Initial Connectivity Check ---
+echo -e "${GREEN}Checking internet connection...${NC}"
+if ! curl -sSf --max-time 5 "https://github.com" -o /dev/null 2>/dev/null; then
+    echo -e "${RED}✗ No internet connection. Please check your network and try again.${NC}"
+    exit 1
+fi
+
 # 2. Ask for Full Environment Setup (Part A)
 echo -e "\n${YELLOW}Do you want to perform a Full Environment Setup?${NC}"
 echo -e "This will install PHP (7.4-8.4), MySQL, Nginx, Node.js, mkcert, etc."
@@ -88,7 +95,9 @@ sudo mkdir -p "$INSTALL_DIR"
 # 4. Check if we are running locally (already have files) or remotely
 if [ -f "main.sh" ]; then
     echo -e "${GREEN}Local files detected. Copying to $INSTALL_DIR...${NC}"
-    sudo cp -r ./* "$INSTALL_DIR"
+    sudo rm -rf "$INSTALL_DIR"
+    sudo mkdir -p "$INSTALL_DIR"
+    sudo cp -ra ./* "$INSTALL_DIR"
 else
     echo -e "${GREEN}Downloading Nova Nexa tool from GitHub...${NC}"
     TEMP_DIR=$(mktemp -d)
@@ -101,7 +110,11 @@ else
     
     # Move files to permanent home
     # Use find to get the extracted directory name dynamically
-    EXTRACTED_DIR=$(find "$TEMP_DIR" -mindepth 1 -maxdepth 1 -type d)
+    EXTRACTED_DIR=$(find "$TEMP_DIR" -mindepth 1 -maxdepth 1 -type d | head -1)
+    
+    # Clean replace
+    sudo rm -rf "$INSTALL_DIR"
+    sudo mkdir -p "$INSTALL_DIR"
     sudo cp -ra "$EXTRACTED_DIR"/. "$INSTALL_DIR"
     
     # Cleanup
