@@ -23,14 +23,20 @@ Once installed, the `nexa` command gives you an interactive REPL interface to ma
 | `new` | Create a new project (PHP, Laravel, React, Next.js, Vue, etc.) from scratch. Auto-configures SSL, Nginx, and Windows hosts. |
 | `attach` | Attach an existing folder (e.g., cloned from Git) to Nginx and generate SSL certificates instantly. |
 | `del` | Completely delete a project, including its folder, Nginx config, SSL certs, and hosts entry. |
-| `list` | Show a clean, interactive list of all active domains and projects. |
+
+> 💡 The project list is shown automatically after every action. No `list` command needed.
 
 ### 3. Utility Commands
 - `phpswitch <version>`: Instantly switch the active PHP version for CLI and Composer (e.g., `phpswitch 8.2`).
 
 ## ⚙️ Installation
 
-To install Nova Nexa and (optionally) perform the full environment setup, simply open your WSL2 Ubuntu terminal and run:
+> [!IMPORTANT]
+> **Windows Setup Required First!**
+> The `curl` command below only installs the CLI tool.
+> Local `.test` domains **will not work** until you complete the
+> [🌐 Windows Hosts Auto-Sync Setup](#-windows-hosts-auto-sync-setup) section.
+> Please complete the PowerShell steps on Windows **before** creating your first project.
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/azrilsyamin/nova-nexa/main/install.sh | bash
@@ -86,8 +92,11 @@ Writes to shared file      ──────►   Watcher reads every 3s
 Open **PowerShell as Administrator** and run:
 
 ```powershell
+# Change "C:" to "D:", "E:", etc. if you prefer a different drive.
 New-Item -ItemType Directory -Force -Path "C:\wsl-hosts-sync"
 ```
+
+> 💡 **Custom Drive:** You can use any drive (D:, E:, etc.). Use the **same drive letter** when prompted during Nova Nexa installation, or run `nexa config` to update it later.
 
 ### Step 2: Create PowerShell Watcher Script
 
@@ -237,4 +246,4 @@ Contributions are welcome! Whether it's reporting a bug, suggesting a new featur
 
 ## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
