@@ -22,5 +22,13 @@ nvm use --lts
 
 echo -e "${GREEN}Node.js installation complete!${NC}"
 
+# Ensure NVM is loaded in .bashrc for future sessions
+if ! grep -q "export NVM_DIR" ~/.bashrc; then
+    echo -e "${GREEN}Adding NVM load lines to .bashrc...${NC}"
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> ~/.bashrc
+fi
+
 node -v
 npm -v
