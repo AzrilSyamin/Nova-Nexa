@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# --- Color Definitions ---
-GREEN='\033[0;32m'
-BLUE='\033[1;34m'
-NC='\033[0m'
+# Load utilities
+source utils/utils.sh
 
-echo -e "${BLUE}------------------------------------------${NC}"
-echo -e "${BLUE}  5/10: Installing MySQL                  ${NC}"
-echo -e "${BLUE}------------------------------------------${NC}"
+nexa_header "5/10: Installing MySQL"
 
 echo -e "${GREEN}Installing MySQL Server...${NC}"
 sudo apt install -y mysql-server
@@ -15,15 +11,10 @@ sudo apt install -y mysql-server
 # Start service immediately (necessary for Docker since policy-rc.d prevents auto-start)
 sudo service mysql start
 
-echo -e "${GREEN}Configuring MySQL root user (empty password for dev)...${NC}"
-sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ''; FLUSH PRIVILEGES;"
-
-echo -e "${GREEN}Configuring MySQL auto-start in .bashrc...${NC}"
-if ! grep -q "sudo service mysql start" ~/.bashrc; then
-    echo "sudo service mysql start" >> ~/.bashrc
-    echo -e "${GREEN}Added to .bashrc${NC}"
-else
-    echo -e "${GREEN}Already in .bashrc${NC}"
-fi
+echo -e "${GREEN}Configuring MySQL: Creating dedicated user '${USER}'...${NC}"
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
+sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${USER}'@'localhost' WITH GRANT OPTION;"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 echo -e "${GREEN}MySQL installation and configuration complete!${NC}"

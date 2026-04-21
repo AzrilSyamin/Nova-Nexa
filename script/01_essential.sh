@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# --- Color Definitions ---
-GREEN='\033[0;32m'
-BLUE='\033[1;34m'
-NC='\033[0m'
+# Load utilities
+source utils/utils.sh
 
-echo -e "${BLUE}------------------------------------------${NC}"
-echo -e "${BLUE}  1/10: Installing Essential Build Tools  ${NC}"
-echo -e "${BLUE}------------------------------------------${NC}"
+nexa_header "1/10: Installing Essential Build Tools"
 
 # Update package lists
 echo -e "${GREEN}Updating package lists...${NC}"

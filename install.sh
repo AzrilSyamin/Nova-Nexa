@@ -159,7 +159,49 @@ EOF
     echo -e "  ${YELLOW}Remember: Create 'wsl-hosts-sync' folder on ${drive_letter}: in Windows.${NC}"
 fi
 
-echo -e "\n${BLUE}══════════════════════════════════════════${NC}"
-echo -e "${GREEN}✓ Installation complete!${NC}"
-echo -e "  You can now run ${YELLOW}'nexa'${NC} from anywhere."
-echo -e "${BLUE}══════════════════════════════════════════${NC}"
+# 7. Sudoers and Service Autostart Configuration
+if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
+    echo -e "\n${GREEN}Configuring passwordless service management...${NC}"
+    # Create sudoers exception for common services
+    echo "%sudo ALL=(ALL) NOPASSWD: /usr/sbin/service mysql start, /usr/sbin/service nginx start, /usr/sbin/service redis-server start" | sudo tee /etc/sudoers.d/nexa_services > /dev/null
+
+    # Ensure services are in .bashrc for autostart
+    for service in mysql nginx redis-server; do
+        if ! grep -q "sudo service $service start" ~/.bashrc; then
+            echo "sudo service $service start > /dev/null 2>&1" >> ~/.bashrc
+        fi
+    done
+
+    # Load NVM temporarily to show version in summary
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+fi
+
+echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}          ✓ NOVA NEXA INSTALLATION COMPLETE!                  ${NC}"
+echo -e "${BLUE}══════════════════════════════════════════════════════════════${NC}"
+
+if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
+    echo -e "\n${YELLOW}  Environment Summary:${NC}"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "PHP" "$(php -v | head -n 1 | cut -d' ' -f2)"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "Nginx" "$(nginx -v 2>&1 | cut -d'/' -f2)"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "MySQL" "$(mysql --version | awk '{print $5}' | tr -d ',')"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "Node.js" "$(node -v)"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "Git" "$(git --version | awk '{print $3}')"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "Composer" "$(composer --version | awk '{print $3}')"
+
+    echo -e "\n${YELLOW}  Database Access:${NC}"
+    echo -e "    User     : ${GREEN}${USER}${NC}"
+    echo -e "    Password : ${WHITE}(empty)${NC}"
+    echo -e "    Command  : ${YELLOW}mysql${NC}"
+fi
+
+echo -e "\n${YELLOW}  Quick Start:${NC}"
+echo -e "    1. Type ${GREEN}nexa${NC} to open the dashboard."
+echo -e "    2. Type ${GREEN}nexa new myapp --cat=dev${NC} to create a project."
+echo -e "    3. Type ${GREEN}phpswitch 8.3${NC} to switch PHP versions instantly."
+
+echo -e "\n${BLUE}══════════════════════════════════════════════════════════════${NC}"
+
+echo -e "\n${YELLOW}Reloading shell to apply changes...${NC}\n"
+exec bash

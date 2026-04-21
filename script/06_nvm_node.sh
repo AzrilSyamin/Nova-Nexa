@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# --- Color Definitions ---
-GREEN='\033[0;32m'
-BLUE='\033[1;34m'
-NC='\033[0m'
+# Load utilities
+source utils/utils.sh
 
-echo -e "${BLUE}------------------------------------------${NC}"
-echo -e "${BLUE}  6/10: Installing NVM & Node.js          ${NC}"
-echo -e "${BLUE}------------------------------------------${NC}"
+nexa_header "6/10: Installing NVM & Node.js"
 
 if [ -d "$HOME/.nvm" ]; then
     echo -e "${GREEN}NVM is already installed.${NC}"
@@ -25,7 +21,6 @@ nvm install --lts
 nvm use --lts
 
 echo -e "${GREEN}Node.js installation complete!${NC}"
-sudo source ~/.bashrc
 
 node -v
 npm -v
