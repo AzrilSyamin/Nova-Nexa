@@ -191,7 +191,7 @@ if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
     printf "    %-12s : ${GREEN}%s${NC}\n" "Composer" "$(composer --version | awk '{print $3}')"
 
     echo -e "\n${YELLOW}  Database Access:${NC}"
-    echo -e "    User     : ${GREEN}${USER}${NC}"
+    echo -e "    User     : ${GREEN}$(whoami)${NC}"
     echo -e "    Password : ${WHITE}(empty)${NC}"
     echo -e "    Command  : ${YELLOW}mysql${NC}"
 fi
