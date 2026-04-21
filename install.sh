@@ -184,11 +184,11 @@ echo -e "${BLUE}═════════════════════�
 if [[ "$confirm_setup" =~ ^[Yy]$ ]]; then
     echo -e "\n${YELLOW}  Environment Summary:${NC}"
     printf "    %-12s : ${GREEN}%s${NC}\n" "PHP" "$(php -v | head -n 1 | cut -d' ' -f2)"
-    printf "    %-12s : ${GREEN}%s${NC}\n" "Nginx" "$(nginx -v 2>&1 | cut -d'/' -f2)"
-    printf "    %-12s : ${GREEN}%s${NC}\n" "MySQL" "$(mysql --version | awk '{print $5}' | tr -d ',')"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "Nginx" "$(nginx -v 2>&1 | cut -d'/' -f2 | awk '{print $1}')"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "MySQL" "$(mysql --version | awk '{print $3}' | awk -F'-' '{print $1}')"
     printf "    %-12s : ${GREEN}%s${NC}\n" "Node.js" "$(node -v)"
     printf "    %-12s : ${GREEN}%s${NC}\n" "Git" "$(git --version | awk '{print $3}')"
-    printf "    %-12s : ${GREEN}%s${NC}\n" "Composer" "$(composer --version | awk '{print $3}')"
+    printf "    %-12s : ${GREEN}%s${NC}\n" "Composer" "$(composer --version 2>/dev/null | grep 'Composer version' | awk '{print $3}')"
 
     echo -e "\n${YELLOW}  Database Access:${NC}"
     echo -e "    User     : ${GREEN}$(whoami)${NC}"
