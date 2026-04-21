@@ -16,7 +16,7 @@ fi
 
 # Define the base directory where other scripts live
 BASE_DIR="/opt/nexa"
-NEXA_VERSION="v1.0.0"
+NEXA_VERSION="v1.0.1"
 
 # Import (Source) the functions from other files
 source "$BASE_DIR/commands/list.sh"
@@ -38,15 +38,6 @@ else
 fi
 
 
-# --- Color Definitions ---
-BLUE='\033[1;34m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-CYAN='\033[0;36m'
-MAGENTA='\033[0;35m' # Deprecated, keep for compatibility if needed
-WHITE='\033[1;37m'
-NC='\033[0m'
 
 # Function to show help menu
 nexa_help() {

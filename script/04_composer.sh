@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# --- Color Definitions ---
-GREEN='\033[0;32m'
-BLUE='\033[1;34m'
-NC='\033[0m'
+# Load utilities
+source utils/utils.sh
 
-echo -e "${BLUE}------------------------------------------${NC}"
-echo -e "${BLUE}  4/10: Installing Composer               ${NC}"
-echo -e "${BLUE}------------------------------------------${NC}"
+nexa_header "4/10: Installing Composer"
 
 if command -v composer &> /dev/null; then
     echo -e "${GREEN}Composer is already installed: $(composer --version | head -n 1)${NC}"

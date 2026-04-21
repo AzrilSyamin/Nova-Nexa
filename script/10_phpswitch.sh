@@ -1,14 +1,9 @@
 #!/bin/bash
 
-# --- Color Definitions ---
-GREEN='\033[0;32m'
-BLUE='\033[1;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+# Load utilities
+source utils/utils.sh
 
-echo -e "${BLUE}------------------------------------------${NC}"
-echo -e "${BLUE}  10/10: Installing phpswitch Utility     ${NC}"
-echo -e "${BLUE}------------------------------------------${NC}"
+nexa_header "10/10: Installing phpswitch Utility"
 
 PHP_SWITCH_PATH="/usr/local/bin/phpswitch"
 DO_INSTALL=true
